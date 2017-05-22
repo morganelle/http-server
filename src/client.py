@@ -1,4 +1,4 @@
-"""Module for the Socket Echo assignment."""
+"""Client module for the Socket Echo assignment."""
 
 
 import socket
@@ -8,7 +8,7 @@ import sys
 def client(message):
     """Set up our client-side socket."""
     info = socket.getaddrinfo('127.0.0.1', 5000)
-    stream = [i for i in info if i[1] == socket.SOCK_STREAM[0]]
+    stream = [i for i in info if i[1] == socket.SOCK_STREAM][0]
     client = socket.socket(*stream[:3])
     client.connect(stream[-1])
 
@@ -30,10 +30,13 @@ def client(message):
         if len(part) < buffer_length:
             complete = True
 
+    # decode returned message from server
+
 
 if __name__ == '__main__':
+    test_message = 'HI THERE'
     while True:
-        client(message)
+        client(test_message)
         try:
             exit = input("Press [Ctrl+D] to quit.")
         except EOFError:
