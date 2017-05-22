@@ -31,4 +31,7 @@ def server():
     conn.close()
 
 if __name__ == '__main__':
-    server()
+    try:
+        server()
+    except KeyboardInterrupt:
+        sys.exit()
