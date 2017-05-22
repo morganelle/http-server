@@ -1,4 +1,4 @@
-"""creating python distribution package setup.py"""
+"""creating python distribution package setup.py."""
 from setuptools import setup
 
 setup(
@@ -13,8 +13,8 @@ setup(
     extras_require={'test': ['pytest', 'pytest-watch', 'pytest-cov', 'tox']},
     entry_points={
         'console_scripts': [
-            "client = client:main",
-            "server = server:main"
+            "client = client:client",
+            "server = server:server"
         ]
     }
 )

@@ -17,28 +17,19 @@ def client(message):
     buffer_length = 8
     echo_message = ""
 
-    # while part != 0:
-    #     part = client.recv(buffer_length)
-    #     echo_message += part
-
-    # return echo_message
-
     complete = False
     while not complete:
         part = client.recv(buffer_length)
-        echo_message += part
+        echo_message += part.decode('utf-8')
         if len(part) < buffer_length:
             complete = True
 
-    # decode returned message from server
+    client.shutdown(socket.SHUT_WR)
+    client.close()
+    return echo_message
 
 
 if __name__ == '__main__':
-    test_message = 'HI THERE'
-    while True:
-        client(test_message)
-        try:
-            exit = input("Press [Ctrl+D] to quit.")
-        except EOFError:
-            client.close()
-            sys.exit()
+    message = sys.argv[1]
+    print(client(message))
+    sys.exit()

@@ -18,14 +18,16 @@ def server():
     client_message = ''
     buffer_length = 8
     complete = False
+
     while not complete:
         part = conn.recv(buffer_length)
-        client_message += part
+        client_message += part.decode('utf8')
         if len(part) < buffer_length:
             complete = True
 
-    print('message received: ', client_message.decode('utf8'))
-    conn.sendall('message from server: ', client_message)
+    print('server received: ', client_message)
+    client_message = client_message.encode('utf8')
+    conn.sendall(client_message)
     conn.close()
 
 if __name__ == '__main__':
