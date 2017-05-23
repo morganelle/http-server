@@ -13,24 +13,20 @@ def client(message):
     client.connect(stream[-1])
     message += '.,.'
     client.sendall(message.encode('utf-8'))
-    print('I sent the client', message)
 
     buffer_length = 8
-    echo_message = ""
-    print(echo_message)
+    echo_message = b''
 
     complete = False
     while not complete:
         part = client.recv(buffer_length)
-        echo_message += part.decode('utf-8')
-        print(part)
-        if echo_message.endswith('.,.'):
-            print('True')
+        echo_message += part
+        if echo_message.decode('utf-8').endswith('.,.'):
             complete = True
 
     client.shutdown(socket.SHUT_WR)
     client.close()
-    return echo_message[:-3]
+    return echo_message[:-3].decode('utf-8')
 
 
 if __name__ == '__main__':
