@@ -22,10 +22,12 @@ def server():
             complete = False
 
             while not complete:
+                part = ''
                 part = conn.recv(buffer_length)
-                client_message += part.decode('utf8')
-                print('in while, part length:', len(part))
-                if len(part) < buffer_length:
+                client_message += part.decode('utf-8')
+                print('in while, part:', part.decode('utf-8'))
+                if client_message.endswith('.,.'):
+                    print('The AND logic prevailed.')
                     complete = True
 
             print('server received: ', client_message)
