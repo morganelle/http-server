@@ -8,7 +8,9 @@ PARAMS_TABLE = [
     ("I Morgan"),
     ("abcdefghijklmnopqrstuveivmdnwjfidlwkfudjekweogutyfnfbvbcmdkedif"),
     ("Hi Kurt!"),
-    ('®')
+    ('®'),
+    ('1234.,.sadf'),
+    ('.,.,.,.,.,.,.,.,.,.,.,.,.,')
 ]
 
 
