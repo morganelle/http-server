@@ -5,14 +5,19 @@ import socket
 import sys
 
 
+CRLF = '\r\n\r\n'
+
+
 def response_ok():
     """Send an ok response."""
-    return b'HTTP/1.1 200 OK\r\n.,.'
+    response_ok = 'HTTP/1.1 200 OK{}'.format(CRLF)
+    return response_ok.encode('utf-8')
 
 
 def response_error():
     """Send an error response."""
-    return b'HTTP/1.1 500 Internal Server Error\r\n'
+    response_error = 'HTTP/1.1 500 Internal Server Error{}'.format(CRLF)
+    return response_error.encode('utf-8')
 
 
 def server():
@@ -34,16 +39,16 @@ def server():
             while not complete:
                 part = conn.recv(buffer_length)
                 client_message += part
-                if client_message.decode('utf-8').endswith('.,.'):
+                if client_message.decode('utf-8').endswith(CRLF):
                     complete = True
 
-            print('server received: ', client_message[:-3].decode('utf-8'))
+            print('server received: ', client_message.decode('utf-8'))
             client_message = client_message
             conn.sendall(response_ok())
             conn.close()
 
     except KeyboardInterrupt:
-        # conn.close()
+        server.shutdown(socket.SHUT_WR)
         server.close()
         print('Exit complete.')
         sys.exit()
