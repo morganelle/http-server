@@ -43,7 +43,7 @@ def server():
             conn.close()
 
     except KeyboardInterrupt:
-        conn.close()
+        # conn.close()
         server.close()
         print('Exit complete.')
         sys.exit()
