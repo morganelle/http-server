@@ -5,6 +5,16 @@ import socket
 import sys
 
 
+def response_ok():
+    """Send an ok response."""
+    return b'HTTP/1.1 200 OK\r\n.,.'
+
+
+def response_error():
+    """Send an error response."""
+    return b'HTTP/1.1 500 Internal Server Error\r\n'
+
+
 def server():
     """Create socket and server."""
     server = socket.socket(family=socket.AF_INET,
@@ -18,24 +28,24 @@ def server():
         while True:
             conn, addr = server.accept()
             client_message = b''
-            buffer_length = 8
+            buffer_length = 256
             complete = False
 
             while not complete:
                 part = conn.recv(buffer_length)
                 client_message += part
-                print('in while, part:', part.decode('utf-8'))
                 if client_message.decode('utf-8').endswith('.,.'):
                     complete = True
 
-            print('server received: ', client_message)
+            print('server received: ', client_message[:-3].decode('utf-8'))
             client_message = client_message
-            conn.sendall(client_message)
+            conn.sendall(response_ok())
             conn.close()
 
     except KeyboardInterrupt:
         conn.close()
         server.close()
+        print('Exit complete.')
         sys.exit()
 
 

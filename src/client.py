@@ -14,7 +14,7 @@ def client(message):
     message += '.,.'
     client.sendall(message.encode('utf-8'))
 
-    buffer_length = 8
+    buffer_length = 256
     echo_message = b''
 
     complete = False

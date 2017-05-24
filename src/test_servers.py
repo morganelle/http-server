@@ -25,3 +25,12 @@ def test_echo(l):
     """Test confirms client receives messages it sent to server."""
     from client import client
     assert client(l) == l
+
+
+@pytest.mark.parametrize('l', PARAMS_TABLE)
+def test_response_ok(l):
+    """Test confirms client receives messages it sent to server."""
+    from client import client
+    assert client(l) == l
+
+
