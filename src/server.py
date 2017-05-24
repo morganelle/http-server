@@ -7,12 +7,12 @@ import sys
 
 def response_ok():
     """Send an ok response."""
-    return b'HTTP/1.1 200 OK\r\n.,.'
+    return b'HTTP/1.1 200 OK\r\n\r\n'
 
 
 def response_error():
     """Send an error response."""
-    return b'HTTP/1.1 500 Internal Server Error\r\n'
+    return b'HTTP/1.1 500 Internal Server Error\r\n\r\n'
 
 
 def server():
@@ -34,16 +34,16 @@ def server():
             while not complete:
                 part = conn.recv(buffer_length)
                 client_message += part
-                if client_message.decode('utf-8').endswith('.,.'):
+                if client_message.decode('utf-8').endswith('\r\n\r\n'):
                     complete = True
 
-            print('server received: ', client_message[:-3].decode('utf-8'))
+            print('server received: ', client_message.decode('utf-8'))
             client_message = client_message
             conn.sendall(response_ok())
             conn.close()
 
     except KeyboardInterrupt:
-        conn.close()
+        server.shutdown(socket.SHUT_WR)
         server.close()
         print('Exit complete.')
         sys.exit()
