@@ -11,7 +11,8 @@ def client(message):
     stream = [i for i in info if i[1] == socket.SOCK_STREAM][0]
     client = socket.socket(*stream[:3])
     client.connect(stream[-1])
-    message += '\r\n\r\n'
+    CRLF = '\r\n\r\n'
+    message += CRLF
     client.sendall(message.encode('utf-8'))
 
     buffer_length = 256
@@ -21,7 +22,7 @@ def client(message):
     while not complete:
         part = client.recv(buffer_length)
         echo_message += part
-        if echo_message.decode('utf-8').endswith('\r\n\r\n'):
+        if echo_message.decode('utf-8').endswith(CRLF):
             complete = True
 
     client.shutdown(socket.SHUT_WR)
@@ -31,6 +32,5 @@ def client(message):
 
 if __name__ == '__main__':
     message = sys.argv[1]
-
     print(client(message))
     sys.exit()
