@@ -25,9 +25,7 @@ def parse_request(client_request):
     client_request = client_request[:-8].split('\r\n')
     print(client_request)
     client_request_irl = client_request[0].split()
-    if client_request_irl[0] == 'GET':
-        print('HAY SUCCESS!!!!')
-        return response_ok()
+    if client_request_irl[0] != 'GET':
     # client_request_host = client_request[1].split()
 
 
@@ -54,8 +52,8 @@ def server():
                     complete = True
 
             print('server received: ', client_message.decode('utf-8'))
-            # parse_request(client_message)
-            conn.sendall(parse_request(client_message))
+            parse_request(client_message)
+            conn.sendall(response_ok)
             conn.close()
 
     except KeyboardInterrupt:
