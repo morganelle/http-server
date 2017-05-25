@@ -9,14 +9,14 @@ CRLF = '\r\n'
 SUCCESS = b'HTTP/1.1 200 OK\r\n\r\n'
 
 
-FAIL_TABLE = [
-    ("I Morgan"),
-    ("abcdefghijklmnopqrstuveivmdnwjfidlwkfudjekweogutyfnfbvbcmdkedif"),
-    ("Hi Kurt!"),
-    (u'®'),
-    ('1234.,.sadf'),
-    ('.,.,.,.,.,.,.,.,.,.,.,.,.,')
-]
+# FAIL_TABLE = [
+#     ("I Morgan"),
+#     ("abcdefghijklmnopqrstuveivmdnwjfidlwkfudjekweogutyfnfbvbcmdkedif"),
+#     ("Hi Kurt!"),
+#     (u'®'),
+#     ('1234.,.sadf'),
+#     ('.,.,.,.,.,.,.,.,.,.,.,.,.,')
+# ]
 
 HTTP_REQUEST_PARAMS_OK = [
     ['GET /path/filé.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', SUCCESS],
@@ -62,11 +62,11 @@ HTTP_REQUEST_PARAMS_EXCEPT = [
 ]
 
 
-@pytest.mark.parametrize('l', FAIL_TABLE)
-def test_response_fail(l):
-    """Test confirms client receives status message."""
-    from client import client
-    assert client(l) == 'HTTP/1.1 500 Internal Server Error\r\n\r\n'
+# @pytest.mark.parametrize('l', FAIL_TABLE)
+# def test_response_fail(l):
+#     """Test confirms client receives status message."""
+#     from client import client
+#     assert client(l) == 'HTTP/1.1 500 Internal Server Error\r\n\r\n'
 
 
 # @pytest.mark.parametrize('request, result', HTTP_REQUEST_PARAMS_OK)

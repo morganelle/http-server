@@ -17,16 +17,20 @@ http_regex = re.compile(r'''(  # Compiles our regular expression into a variable
                        #  allowing us to make better organized expessions.
 
 
+
+
+
+
 # Our test header
-header = 'GET /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'
+header = '/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'
 
 
 # We could use findall, but search meets our needs since we're searching
 # for an exact phrase
 
 
-mo = http_regex.search(header)  #  Store the results in an arbitrarily named variable
-print(mo.groups())  #  mo is an iterable, the first thing at index 0 is the phrase it find in its entirety
+mo = http_regex.find(header)  #  Store the results in an arbitrarily named variable
+print(list(mo))  #  mo is an iterable, the first thing at index 0 is the phrase it find in its entirety
 
 def request_parser(message):
     """This can be adapted to accomodate more verbs and details as we accept more verbose headers."""
@@ -39,7 +43,7 @@ def request_parser(message):
         ([^\s]+)
         (\r\n\r\n)
         )''', re.VERBOSE)
-    mo = http_regex.search(message)
+    mo = http_regex.findall(message)
     if mo is None:
         raise ConnectionRefusedError('Invalid HTTP request.')
     return response_ok()

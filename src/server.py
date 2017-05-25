@@ -18,14 +18,16 @@ def response_ok():
     return response_ok.encode('utf-8')
 
 
-def response_error():
+def response_error(error):
     """Send an error response."""
-    response_error = 'HTTP/1.1 500 Internal Server Error{}'.format(CRLF)
+    response_error = 'HTTP/1.1 {}{}'.format(error, CRLF)
     return response_error.encode('utf-8')
 
 
 def parse_request(client_request):
     """Parse client HTTP request and raise errors."""
+    get_present = re.compile(r'POST|PUT|HEAD|CONNECT|DELETE|OPTIONS|TRACE|PATCH')
+    version_correct = re.compile(r'HTTP/1.1')
     http_regex = re.compile(r'''(
         (GET\s)
         ([^\s]+\s)
@@ -35,10 +37,18 @@ def parse_request(client_request):
         ([^\s]+)
         (\r\n\r\n)
         )''', re.VERBOSE)
-    mo = http_regex.search(client_request)
+    mo = http_regex.fullmatch(client_request)
     if mo is None:
+        if get_present.match(client_request) is not None:
+            raise ValueError('405')
+
+        # elif version_correct is None:
+        #     return '505'
+        # else:
+        #     return '400'
         raise ConnectionRefusedError('Invalid HTTP request.')
     return response_ok()
+
 
 
 
@@ -67,8 +77,8 @@ def server():
             print('server received: ', client_message.decode('utf-8'))
             try:
                 conn.sendall(parse_request(client_message.decode('utf-8')))
-            except ConnectionRefusedError:
-                conn.sendall(response_error())
+            except ValueError as x:
+                conn.sendall(response_error(x))
             conn.close()
 
     except KeyboardInterrupt:
