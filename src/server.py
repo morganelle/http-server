@@ -20,6 +20,15 @@ def response_error():
     return response_error.encode('utf-8')
 
 
+def parse_request(client_request):
+    """Parse client HTTP request and raise errors."""
+    client_request = client_request[:-8].split('\r\n')
+    print(client_request)
+    client_request_irl = client_request[0].split()
+    if client_request_irl[0] != 'GET':
+    # client_request_host = client_request[1].split()
+
+
 def server():
     """Create socket and server."""
     server = socket.socket(family=socket.AF_INET,
@@ -43,8 +52,8 @@ def server():
                     complete = True
 
             print('server received: ', client_message.decode('utf-8'))
-            client_message = client_message
-            conn.sendall(response_ok())
+            parse_request(client_message)
+            conn.sendall(response_ok)
             conn.close()
 
     except KeyboardInterrupt:
