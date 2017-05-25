@@ -40,4 +40,6 @@ def request_parser(message):
         (\r\n\r\n)
         )''', re.VERBOSE)
     mo = http_regex.search(message)
-    return mo == None
+    if mo is None:
+        raise ConnectionRefusedError('Invalid HTTP request.')
+    return response_ok()

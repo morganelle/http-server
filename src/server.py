@@ -1,11 +1,15 @@
 """Server module for the Socket Echo assignment."""
 
 
+import re
 import socket
 import sys
 
 
 CRLF = '\r\n\r\n'
+
+
+
 
 
 def response_ok():
@@ -22,11 +26,20 @@ def response_error():
 
 def parse_request(client_request):
     """Parse client HTTP request and raise errors."""
-    client_request = client_request[:-8].split('\r\n')
-    print(client_request)
-    client_request_irl = client_request[0].split()
-    if client_request_irl[0] != 'GET':
-    # client_request_host = client_request[1].split()
+    http_regex = re.compile(r'''(
+        (GET\s)
+        ([^\s]+\s)
+        (HTTP/1.1)
+        (\r\n)
+        (Host:\s)
+        ([^\s]+)
+        (\r\n\r\n)
+        )''', re.VERBOSE)
+    mo = http_regex.search(client_request)
+    if mo is None:
+        raise ConnectionRefusedError('Invalid HTTP request.')
+    return response_ok()
+
 
 
 def server():
@@ -52,8 +65,10 @@ def server():
                     complete = True
 
             print('server received: ', client_message.decode('utf-8'))
-            parse_request(client_message)
-            conn.sendall(response_ok)
+            try:
+                conn.sendall(parse_request(client_message.decode('utf-8')))
+            except ConnectionRefusedError:
+                conn.sendall(response_error())
             conn.close()
 
     except KeyboardInterrupt:
