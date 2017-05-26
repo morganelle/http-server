@@ -13,6 +13,7 @@ CRLF = '\r\n\r\n'
 def response_ok(uri):
     """Send an ok response."""
     response_ok = 'HTTP/1.1 200 OK{}{}{}'.format(LINE_BREAK, uri, CRLF)
+    print(response_ok)
     return response_ok.encode('utf-8')
 
 
