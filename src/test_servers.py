@@ -33,7 +33,8 @@ HTTP_REQUEST_PARAMS_OK = [
 
 
 HTTP_REQUEST_PARAMS_EXCEPT = [
-    'FOOBARAL /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'PUT /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'GET /path/file.html HTTP/1.0\r\nHost: www.host1.com:80\r\n\r\n',
     'POST /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     'GE /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     'GET/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
@@ -73,7 +74,7 @@ HTTP_REQUEST_PARAMS_EXCEPT = [
 def test_response_ok():
     """Test confirms client receives status message."""
     from client import client
-    assert client('GET /path/filé.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n') == 'HTTP/1.1 200 OK\r\n\r\n'
+    assert client('GET /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n') == 'HTTP/1.1 200 OK\r\n\r\n'
 
 
 @pytest.mark.parametrize('l, result', HTTP_REQUEST_PARAMS_OK)
@@ -87,5 +88,5 @@ def test_regex_ok(l, result):
 def test_regex_except(l):
     """Test the regex to parse headers."""
     from server import parse_request
-    with pytest.raises(ConnectionRefusedError):
+    with pytest.raises(ValueError):
         parse_request(l)

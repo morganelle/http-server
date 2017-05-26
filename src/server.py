@@ -9,9 +9,6 @@ import sys
 CRLF = '\r\n\r\n'
 
 
-
-
-
 def response_ok():
     """Send an ok response."""
     response_ok = 'HTTP/1.1 200 OK{}'.format(CRLF)
@@ -20,7 +17,12 @@ def response_ok():
 
 def response_error(error):
     """Send an error response."""
-    response_error = 'HTTP/1.1 {}{}'.format(error, CRLF)
+    error_dict = {
+        '405': '405 Method Not Allowed',
+        '505': '505 HTTP Version Not Supported'
+    }
+    response_error = '{}{}'.format(error_dict.get(error, '400 Not Found'), CRLF)  # default needs editing
+    print('response error before encoding', response_error)
     return response_error.encode('utf-8')
 
 
@@ -37,19 +39,17 @@ def parse_request(client_request):
         ([^\s]+)
         (\r\n\r\n)
         )''', re.VERBOSE)
-    mo = http_regex.fullmatch(client_request)
+    mo = http_regex.match(client_request)
     if mo is None:
+        print('before if')
         if get_present.match(client_request) is not None:
+            print('in if')
             raise ValueError('405')
-
-        # elif version_correct is None:
-        #     return '505'
-        # else:
-        #     return '400'
-        raise ConnectionRefusedError('Invalid HTTP request.')
+        elif version_correct.match(client_request) is None:
+            print('in elif')
+            raise ValueError('505')
+        raise ValueError()
     return response_ok()
-
-
 
 
 def server():
