@@ -19,7 +19,8 @@ PARAMS_TABLE = [
     ('.,.,.,.,.,.,.,.,.,.,.,.,.,')
 ]
 
-The predicted output will be a HTTP 200 OK.
+The predicted output will be an ehco of the message.
+
 
 ## Deployment
 
@@ -43,5 +44,6 @@ Version 1.0
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
+
 
 Codefellows for understanding the Network Stacks
