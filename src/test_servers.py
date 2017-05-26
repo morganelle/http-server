@@ -9,15 +9,6 @@ CRLF = '\r\n'
 SUCCESS = b'HTTP/1.1 200 OK\r\n\r\n'
 
 
-# FAIL_TABLE = [
-#     ("I Morgan"),
-#     ("abcdefghijklmnopqrstuveivmdnwjfidlwkfudjekweogutyfnfbvbcmdkedif"),
-#     ("Hi Kurt!"),
-#     (u'®'),
-#     ('1234.,.sadf'),
-#     ('.,.,.,.,.,.,.,.,.,.,.,.,.,')
-# ]
-
 HTTP_REQUEST_PARAMS_OK = [
     ['GET /path/filé.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', SUCCESS],
     ['GET /path/filé.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', SUCCESS],
@@ -63,18 +54,25 @@ HTTP_REQUEST_PARAMS_EXCEPT = [
 ]
 
 
-# @pytest.mark.parametrize('l', FAIL_TABLE)
-# def test_response_fail(l):
-#     """Test confirms client receives status message."""
-#     from client import client
-#     assert client(l) == 'HTTP/1.1 500 Internal Server Error\r\n\r\n'
-
-
 # @pytest.mark.parametrize('request, result', HTTP_REQUEST_PARAMS_OK)
 def test_response_ok():
     """Test confirms client receives status message."""
     from client import client
-    assert client('GET /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n') == 'HTTP/1.1 200 OK\r\n\r\n'
+    assert client('GET /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n') == 'HTTP/1.1 200 OK\r\nGET /path/file.html \r\n\r\n'
+
+
+# @pytest.mark.parametrize('request, result', HTTP_REQUEST_PARAMS_OK)
+def test_response_405():
+    """Test confirms client receives status message."""
+    from client import client
+    assert client('PUT /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n') == 'HTTP/1.1 405 Method Not Allowed\r\n\r\n'
+
+
+# @pytest.mark.parametrize('request, result', HTTP_REQUEST_PARAMS_OK)
+def test_response_505():
+    """Test confirms client receives status message."""
+    from client import client
+    assert client('GET /path/file.html HTTP/1.0\r\nHost: www.host1.com:80\r\n\r\n') == 'HTTP/1.1 505 HTTP Version Not Supported\r\n\r\n'
 
 
 @pytest.mark.parametrize('l, result', HTTP_REQUEST_PARAMS_OK)

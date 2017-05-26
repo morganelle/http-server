@@ -6,23 +6,25 @@ import socket
 import sys
 
 
+LINE_BREAK = '\r\n'
 CRLF = '\r\n\r\n'
 
 
-def response_ok():
+def response_ok(uri):
     """Send an ok response."""
-    response_ok = 'HTTP/1.1 200 OK{}'.format(CRLF)
+    response_ok = 'HTTP/1.1 200 OK{}{}{}'.format(LINE_BREAK, uri, CRLF)
     return response_ok.encode('utf-8')
 
 
 def response_error(error):
     """Send an error response."""
     error_dict = {
-        '405': '405 Method Not Allowed',
-        '505': '505 HTTP Version Not Supported'
+        '405': 'HTTP/1.1 405 Method Not Allowed',
+        '505': 'HTTP/1.1 505 HTTP Version Not Supported'
     }
+    print(error, error in error_dict)
     response_error = '{}{}'.format(error_dict.get(error, '400 Not Found'), CRLF)  # default needs editing
-    print('response error before encoding', response_error)
+    print(error, 'response error before encoding', response_error)
     return response_error.encode('utf-8')
 
 
@@ -47,9 +49,11 @@ def parse_request(client_request):
             raise ValueError('405')
         elif version_correct.match(client_request) is None:
             print('in elif')
-            raise ValueError('505')
+            raise ValueError('505', '404')
         raise ValueError()
-    return response_ok()
+    uri = '{}{}'.format(mo.group(2), mo.group(3))
+    print('uri', uri)
+    return response_ok(uri)
 
 
 def server():
@@ -78,7 +82,8 @@ def server():
             try:
                 conn.sendall(parse_request(client_message.decode('utf-8')))
             except ValueError as x:
-                conn.sendall(response_error(x))
+                print('except statement x:', x)
+                conn.sendall(response_error(x[0]))
             conn.close()
 
     except KeyboardInterrupt:
