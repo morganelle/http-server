@@ -15,7 +15,7 @@ HTTP_REQUEST_PARAMS_OK = [
     ['GET /path HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', b'HTTP/1.1 200 OK\r\nGET /path \r\n\r\n'],
     ['GET /foobarfile.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', b'HTTP/1.1 200 OK\r\nGET /foobarfile.html \r\n\r\n'],
     ['GET /somecrap HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', b'HTTP/1.1 200 OK\r\nGET /somecrap \r\n\r\n'],
-    ['GET `~<>,.?/''""\{\}[]|\ HTTP/1.1\r\nHost: !@#$#$%^^&&**()_=-\r\n\r\n', b'HTTP/1.1 200 OK\r\nGET `~<>,.?/''""\{\}[]|\ \r\n\r\n'],
+    ['GET `~<>,.?/''""\{\}[]|\ HTTP/1.1\r\nHost: !@#$#$%^^&&**()_=-\r\n\r\n', b'HTTP/1.1 200 OK\r\nGET `~<>,.?/""\{\}[]|\ \r\n\r\n'],
     ['GET garbage HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', b'HTTP/1.1 200 OK\r\nGET garbage \r\n\r\n'],
     ['GET /path/file.html HTTP/1.1\r\nHost: www0\r\n\r\n', b'HTTP/1.1 200 OK\r\nGET /path/file.html \r\n\r\n'],
 ]
