@@ -8,16 +8,10 @@ PARAMS_TABLE = [
     ("I Morgan"),
     ("abcdefghijklmnopqrstuveivmdnwjfidlwkfudjekweogutyfnfbvbcmdkedif"),
     ("Hi Kurt!"),
-    ('®'),
+    (u'®'),
     ('1234.,.sadf'),
     ('.,.,.,.,.,.,.,.,.,.,.,.,.,')
 ]
-
-
-"""messages shorter than one buffer in length"""
-"""messages longer than several buffers in length"""
-"""messages that are an exact multiple of one buffer in length"""
-"""messages containing non-ascii characters"""
 
 
 @pytest.mark.parametrize('l', PARAMS_TABLE)
