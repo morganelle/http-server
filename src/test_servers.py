@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Test our Socket Echo assignment."""
 
 
@@ -13,9 +14,8 @@ PARAMS_TABLE = [
     ('.,.,.,.,.,.,.,.,.,.,.,.,.,')
 ]
 
-
 @pytest.mark.parametrize('l', PARAMS_TABLE)
-def test_echo(l):
-    """Test confirms client receives messages it sent to server."""
+def test_response_ok(l):
+    """Test confirms client receives status message."""
     from client import client
-    assert client(l) == l
+    assert client(l) == 'HTTP/1.1 200 OK\r\n\r\n'
