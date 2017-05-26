@@ -10,13 +10,13 @@ CRLF = '\r\n\r\n'
 
 def response_ok():
     """Send an ok response."""
-    response_ok = 'HTTP/1.1 200 OK{}'.format(CRLF)
+    response_ok = b'HTTP/1.1 200 OK{}'.format(CRLF)
     return response_ok.encode('utf-8')
 
 
 def response_error():
     """Send an error response."""
-    response_error = 'HTTP/1.1 500 Internal Server Error{}'.format(CRLF)
+    response_error = b'HTTP/1.1 500 Internal Server Error{}'.format(CRLF)
     return response_error.encode('utf-8')
 
 
