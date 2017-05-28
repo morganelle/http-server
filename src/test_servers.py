@@ -21,16 +21,22 @@ SUCCESS = b'HTTP/1.1 200 OK\r\n\r\n'
 # ]
 
 
-def test_uri_good():
-    """."""
-    from client import client
-    assert client('GET /path/file.html HTTP/1.1\r\nHost: asdfafjasldkfjei\r\n\r\n') == b'HTTP/1.1 200 OK\r\nGET /path/file.html \r\n\r\n'
+# def test_uri_good():
+    # """."""
+    # from client import client
+    # assert client('GET /path/file.html HTTP/1.1\r\nHost: asdfafjasldkfjei\r\n\r\n') == b'HTTP/1.1 200 OK\r\nGET /path/file.html \r\n\r\n'
 
 
-def test_uri_bad():
+def test_path_good():
     """."""
     from client import client
-    assert client('GET / HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n') == b'HTTP/1.1 404 Not Found\r\n\r\n'
+    assert client('GET /webroot HTTP/1.1\r\nHost: asdfafjasldkfjei\r\n\r\n') == b'HTTP/1.1 200 OK\r\nGET /path/file.html \r\n\r\n'
+
+
+# def test_uri_bad():
+#     """."""
+#     from client import client
+#     assert client('GET / HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n') == b'HTTP/1.1 404 Not Found\r\n\r\n'
 
 
 # HTTP_REQUEST_PARAMS_EXCEPT = [

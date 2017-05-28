@@ -4,17 +4,23 @@
 import re
 import socket
 import sys
+import os.path
 
 
 LINE_BREAK = '\r\n'
 CRLF = '\r\n\r\n'
+ROOT_PATH = '../src'
 
 
 def resolve_uri(uri):
     """Determine validity of resource request."""
-    print(uri)
-    if uri == 'GET /path/file.html ':  # static test condition
-        print('in uri match')
+    print('uri', uri)
+    resource = uri.split()[-1][1:]
+    request_path = os.path.join(ROOT_PATH, resource)
+    print('request_path', request_path, 'isdir:', os.path.isdir(request_path))
+    if os.path.isdir(request_path):
+        print('in path match')
+        print(request_path)
         return uri
     else:
         print('uri value error')
@@ -59,11 +65,11 @@ def parse_request(client_request):
     if mo is None:
         print('before if')
         if get_present.match(client_request) is not None:
-            print('in if')
+            print('in 405 if')
             raise ValueError('405')
         elif version_correct.match(client_request) is None:
-            print('in elif')
-            raise ValueError('505', '404')
+            print('in 505 elif')
+            raise ValueError('505')
         raise ValueError()
     uri = '{}{}'.format(mo.group(2), mo.group(3))
     print('uri', uri)
@@ -76,7 +82,7 @@ def server():
                            type=socket.SOCK_STREAM,
                            proto=socket.IPPROTO_TCP)
     address = ('127.0.0.1', 5000)
-    print('server running at:', address[0], address[1])
+    print('server running at port', address[1])
     server.bind(address)
     server.listen(1)
 
