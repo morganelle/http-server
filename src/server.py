@@ -7,11 +7,11 @@ import sys
 import os.path
 import os
 import io
-from datetime import datetime
+# from datetime import datetime
 
 LINE_BREAK = '\r\n'
 CRLF = '\r\n\r\n'
-ROOT_PATH = '../src'
+ROOT_PATH = '../src/webroot'
 
 
 def resolve_uri(uri):
@@ -25,12 +25,12 @@ def resolve_uri(uri):
         print('in path match')
         print(request_path)
         body = os.listdir(request_path)
+        size = os.path.getsize(request_path)
         body = '<p>{}</p>'.format(body)
-        size = len(body)
+        # size = len(body)
         return 'text/html', body, size
     elif os.path.isfile(request_path):
         print('in elif for .isfile')
-        split_request = request_path.split('.')
         file_type_dict = {
             'txt': 'text/plain',
             'html': 'text/html',
@@ -42,6 +42,7 @@ def resolve_uri(uri):
             'mp4': 'video/mp4',
             'octet-stream': 'application/octet-stream'
         }
+        split_request = request_path.split('.')
         file_type = file_type_dict[split_request[-1]]
         size = os.path.getsize(request_path)
         if file_type not in ['text/plain', 'text/html']:
@@ -60,8 +61,7 @@ def resolve_uri(uri):
 def response_ok(uri):
     """Send an ok response."""
     content_type, content, size = resolve_uri(uri)
-    response_ok = 'HTTP/1.1 200 OK\r\nDate: {}\r\nContent-Type: {}\r\nContent-Length: {}\r\n{}{}'.format(
-        datetime.now().isoformat(),
+    response_ok = 'HTTP/1.1 200 OK\r\nContent-Type: {}\r\nContent-Length: {}\r\n{}{}'.format(
         content_type,
         size,
         content,
