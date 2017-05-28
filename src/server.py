@@ -16,16 +16,13 @@ ROOT_PATH = '../src/webroot'
 
 def resolve_uri(uri):
     """Determine validity of resource request."""
-    print(uri.split())
     resource = uri.split()[-1][1:]
     request_path = os.path.join(ROOT_PATH, resource)
     print('request_path', request_path, 'isdir:', os.path.isdir(request_path))
     if os.path.isdir(request_path):
-        print('in path match')
-        print(request_path)
+        print('in path match', request_path)
         body = os.listdir(request_path)
         body = '<!DOCTYPE html><html><body><p>{}</p></body></html>'.format(body)
-        # size = os.path.getsize(request_path)
         size = len(body)
         return 'text/html', body, size
     elif os.path.isfile(request_path):
@@ -34,6 +31,8 @@ def resolve_uri(uri):
             'txt': 'text/plain',
             'html': 'text/html',
             'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'ico': 'image/x-icon',
             'png': 'image/png',
             'mpeg': 'audio/mpeg',
             'ogg': 'audio/ogg',
@@ -45,7 +44,12 @@ def resolve_uri(uri):
         file_type = file_type_dict[split_request[-1]]
         size = os.path.getsize(request_path)
         if file_type not in ['text/plain', 'text/html']:
-            body = 'This would be an image.'
+            body = '<!DOCTYPE html><html><body><p>Insert {} here</p></body></html>'.format(request_path) 
+            size = len(body)
+            # size = os.path.getsize(request_path)
+            # body = open(request_path, 'rb')
+            # body_read = body.read()
+            # body.close()
             return file_type, body, size
         body = io.open(request_path, encoding='utf-8')
         body = open(request_path)
