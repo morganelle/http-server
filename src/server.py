@@ -7,7 +7,7 @@ import sys
 import os.path
 import os
 import io
-# from datetime import datetime
+from datetime import datetime
 
 LINE_BREAK = '\r\n'
 CRLF = '\r\n\r\n'
@@ -24,8 +24,8 @@ def resolve_uri(uri):
         print('in path match')
         print(request_path)
         body = os.listdir(request_path)
-        body = '<!DOCTYPE html><html><body><p>{}</p></body></html>'.format(body)
-        # size = os.path.getsize(request_path)
+        body = '<!DOCTYPE html><html><body><p>{}</p></body></html>'.format(
+            body)
         size = len(body)
         return 'text/html', body, size
     elif os.path.isfile(request_path):
@@ -33,6 +33,7 @@ def resolve_uri(uri):
         file_type_dict = {
             'txt': 'text/plain',
             'html': 'text/html',
+            'ico': 'image/ico',
             'jpg': 'image/jpeg',
             'png': 'image/png',
             'mpeg': 'audio/mpeg',
@@ -60,12 +61,17 @@ def resolve_uri(uri):
 def response_ok(uri):
     """Send an ok response."""
     content_type, content, size = resolve_uri(uri)
-    response_ok = 'HTTP/1.1 200 OK\r\nContent-Type: {}\r\nContent-Length: {}{}{}{}'.format(
-        content_type,
-        size,
-        CRLF,
-        content,
-        CRLF)
+    now = datetime.now()
+    format_now = now.strftime('%a, %d %b %Y %H:%M:%S %Z')
+    response_ok = '''
+HTTP/1.1 200 OK
+Date: {}
+Content-Type: {}
+Content-Length: {}
+
+{}
+
+'''.format(format_now, content_type, size, content)
     print(response_ok)
     return response_ok.encode('utf-8')
 
@@ -78,7 +84,9 @@ def response_error(error):
         '505': 'HTTP/1.1 505 HTTP Version Not Supported'
     }
     print(error, error in error_dict)
-    response_error = '{}{}'.format(error_dict.get(error, '400 Bad Request'), CRLF)
+    response_error = '{}{}'.format(
+        error_dict.get(
+            error, '400 Bad Request'), CRLF)
     print(error, 'response error before encoding', response_error)
     return response_error.encode('utf-8')
 
