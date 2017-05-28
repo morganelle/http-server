@@ -9,13 +9,6 @@ CRLF = '\r\n'
 SUCCESS = b'HTTP/1.1 200 OK\r\n\r\n'
 
 
-<<<<<<< HEAD
-@pytest.mark.parametrize('request', PARAMS_TABLE)
-def test_echo(request):
-    """Test confirms client receives messages it sent to server."""
-    from client import client
-    assert client(request) == request
-=======
 # HTTP_REQUEST_PARAMS_OK = [
 #     ['GET /path/file.html HTTP/1.1\r\nHost: asdfafjasldkfjei\r\n\r\n', b'HTTP/1.1 200 OK\r\nGET /path/file.html \r\n\r\n'],
 #     ['GET / HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', b'HTTP/1.1 200 OK\r\nGET / \r\n\r\n'],
@@ -34,10 +27,18 @@ def test_echo(request):
     # assert client('GET /path/file.html HTTP/1.1\r\nHost: asdfafjasldkfjei\r\n\r\n') == b'HTTP/1.1 200 OK\r\nGET /path/file.html \r\n\r\n'
 
 
-def test_path_good():
+# def test_path_good():
+#     """."""
+#     from client import client
+#     assert client('GET /webroot HTTP/1.1\r\nHost: asdfafjasldkfjei\r\n\r\n') == b'HTTP/1.1 200 OK\r\nGET /path/file.html \r\n\r\n'
+
+
+def test_file_good():
     """."""
     from client import client
-    assert client('GET /webroot HTTP/1.1\r\nHost: asdfafjasldkfjei\r\n\r\n') == b'HTTP/1.1 200 OK\r\nGET /path/file.html \r\n\r\n'
+    assert client('GET /webroot/images/JPEG_example.jpg HTTP/1.1\r\nHost: asdfafjasldkfjei\r\n\r\n') == b'HTTP/1.1 200 OK\r\nGET /path/file.html \r\n\r\n'
+
+
 
 
 # def test_uri_bad():
@@ -111,4 +112,3 @@ def test_path_good():
 #     from server import parse_request
 #     with pytest.raises(ValueError):
 #         parse_request(l)
->>>>>>> 17db150549c872396f91d9ed0152aa7d786a77cf
