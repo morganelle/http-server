@@ -16,7 +16,6 @@ ROOT_PATH = '../src/webroot'
 
 def resolve_uri(uri):
     """Determine validity of resource request."""
-    print('uri', uri)
     print(uri.split())
     resource = uri.split()[-1][1:]
     request_path = os.path.join(ROOT_PATH, resource)
@@ -25,9 +24,9 @@ def resolve_uri(uri):
         print('in path match')
         print(request_path)
         body = os.listdir(request_path)
-        size = os.path.getsize(request_path)
-        body = '<p>{}</p>'.format(body)
-        # size = len(body)
+        body = '<!DOCTYPE html><html><body><p>{}</p></body></html>'.format(body)
+        # size = os.path.getsize(request_path)
+        size = len(body)
         return 'text/html', body, size
     elif os.path.isfile(request_path):
         print('in elif for .isfile')
@@ -61,9 +60,10 @@ def resolve_uri(uri):
 def response_ok(uri):
     """Send an ok response."""
     content_type, content, size = resolve_uri(uri)
-    response_ok = 'HTTP/1.1 200 OK\r\nContent-Type: {}\r\nContent-Length: {}\r\n{}{}'.format(
+    response_ok = 'HTTP/1.1 200 OK\r\nContent-Type: {}\r\nContent-Length: {}{}{}{}'.format(
         content_type,
         size,
+        CRLF,
         content,
         CRLF)
     print(response_ok)
