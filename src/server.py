@@ -82,7 +82,7 @@ def parse_request(client_request):
     """Parse client HTTP request and raise errors."""
     get_present = re.compile(
         r'POST|PUT|HEAD|CONNECT|DELETE|OPTIONS|TRACE|PATCH')
-    version_correct = re.compile(r'HTTP/1\.1')
+    version_correct = re.compile(r'HTTP/[^1.1]')
     http_regex = re.compile(r'''(
         (GET\s)
         ([^\s]+\s)
@@ -100,7 +100,7 @@ def parse_request(client_request):
         if get_present.match(client_request) is not None:
             print('in 405 if')
             raise ValueError('405')
-        elif version_correct.search(client_request) is None:
+        elif version_correct.search(client_request) is not None:
             print('in 505 elif')
             raise ValueError('505')
         raise ValueError('400')

@@ -21,37 +21,47 @@ HTTP_REQUEST_PARAMS_400 = [
     'GET/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     '/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     'GET HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
-    # ('GET/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
-    # ('GETHTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
-    # ('GET /path/file.html HTTP/1.1\r\nwww.host1.com:80\r\n\r\n'),
-    # ('GET /path/file.html HTTP/1.1\r\n\r\n\r\n'),
-    # ('GET /path/file.html HTTP/1.1Host: www.host1.com:80\r\n\r\n'),
-    # ('GET /path/file.html\r\nHost: www.host1.com:80'),
-    # ('GET\r\nHost: www.host1.com:80\r\n\r\n'),
-    # ('get garbage HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
-    # ('GET /path/file.html    HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
-    # ('GET /path/file.htmlHTTP/1.1\r\nHost:www.host1.com:80\r\n\r\n'),
-    # ('GET /path/file.htmlHTTP/1.1Host:www.host1.com:80'),
     'GET\r\n\r\n',
     '/path/file.html\r\n\r\n'
-    # ('HTTP/1.1\r\n'),
-    # ('Host: www.host1.com:80'),
-    # ('GET /path/file.html HTTP/1.1\r\n\sHost: www.host1.com:80\r\n\r\\'),
-    # ('GET /path/file.html HTTP/1.1\r\rHost: www.host1.com:80\r\n\r'),
-    # ('GET    /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
-    # ('GET/path/file.html HTTP/1.1\r\n\r\n\r\n\rHost: www.host1.com:80\r\n\r\n'),
-    # ('')
+    '\r\n\r\n',
+    'GET/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'GETHTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'GET /path/file.html HTTP/1.1\r\nwww.host1.com:80\r\n\r\n',
+    'GET /path/file.html HTTP/1.1\r\n\r\n\r\n',
+    'GET /path/file.html HTTP/1.1Host: www.host1.com:80\r\n\r\n',
+    'GET\r\nHost: www.host1.com:80\r\n\r\n',
+    'HTTP/1.1\r\n\r\n',
+    'Host: www.host1.com:80\r\n\r\n',
+    'GET    /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'GET /path/file.html    HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'GET/path/file.html HTTP/1.1\r\n\r\n\r\n\rHost: www.host1.com:80\r\n\r\n',
+    'get garbage HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'GET /path/file.htmlHTTP/1.1\r\nHost:www.host1.com:80\r\n\r\n',
+    'GET /path/file.html HTTP/1.1\r\n\sHost: www.host1.com:80\r\n\r\n',
+    'GET/path/file.html HTTP/1.1\r\n\r\n\r\n\rHost: www.host1.com:80\r\n\r\n'
 ]
+
+
+HTTP_REQUEST_PARAMS_404 = [
+    'GET /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'GET /path HTTP/1.1\r\nHost: hi.there\r\n\r\n'
+]
+
 
 HTTP_REQUEST_PARAMS_405 = [
     'PUT /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
-    'POST /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'
+    'POST /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'HEAD /path/file.html HTTP/1.0\r\nHost: www.host1.com:80\r\n\r\n',
+    'CONNECT ? HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'OPTIONS /path/file.html HTTP/1.1\r\n\r\n',
+    'TRACE /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'
+    'PATCH /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'
 ]
 
 HTTP_REQUEST_PARAMS_505 = [
-    'POST /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
-    'GET /path/file.html HTTP/1.0\r\nHost: www.host1.com:80\r\n\r\n',
-    'PUT /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'
+    'GET /path/file.html HTTP/0.9\r\nHost: www.host1.com:80\r\n\r\n',
+    # 'GET /path/file.html HTTP/1.0\r\nHost: www.host1.com:80\r\n\r\n',
+    'GET /path/file.html HTTP/0.9\r\nHost: www.host1.com:80\r\n\r\n'
 ]
 
 
@@ -78,6 +88,13 @@ def test_exceptions_400(request):
     """."""
     from client import client
     assert client(request) == RESPONSE_400
+
+
+@pytest.mark.parametrize('request', HTTP_REQUEST_PARAMS_404)
+def test_exceptions_404(request):
+    """."""
+    from client import client
+    assert client(request) == RESPONSE_404
 
 
 @pytest.mark.parametrize('request', HTTP_REQUEST_PARAMS_405)
