@@ -60,7 +60,7 @@ HTTP_REQUEST_PARAMS_405 = [
 
 HTTP_REQUEST_PARAMS_505 = [
     'GET /path/file.html HTTP/0.9\r\nHost: www.host1.com:80\r\n\r\n',
-    # 'GET /path/file.html HTTP/1.0\r\nHost: www.host1.com:80\r\n\r\n',
+    # 'GET / HTTP/1.0\r\nHost: www.host1.com:80\r\n\r\n',
     'GET /path/file.html HTTP/0.9\r\nHost: www.host1.com:80\r\n\r\n'
 ]
 
