@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Server module for the Socket Echo assignment."""
 
 
@@ -44,14 +45,14 @@ def resolve_uri(uri):
         file_type = file_type_dict[split_request[-1]]
         size = os.path.getsize(request_path)
         if file_type not in ['text/plain', 'text/html']:
-            body_read = '<!DOCTYPE html><html><body><p>Insert {} here</p></body></html>'.format(request_path) 
-            size = len(body_read)
+            # body_read = '<!DOCTYPE html><html><body><p>Insert {} here</p></body></html>'.format(request_path) 
+            # size = len(body_read)
             # size = os.path.getsize(request_path)
-            # body = open(request_path, 'rb')
-            # body_read = body.read()
+            body = open(request_path, 'rb')
+            body_read = body.read()
             # body_read.decode('utf-8')
-            # body_read.encode('utf-8')
-            # body.close()
+            body_read.encode('utf-8')
+            body.close()
             return file_type, body_read, size
         body = io.open(request_path, encoding='utf-8')
         body = open(request_path)
