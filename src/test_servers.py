@@ -17,13 +17,10 @@ RESPONSE_405 = b'HTTP/1.1 405 Method Not Allowed\r\n\r\n'
 RESPONSE_505 = b'HTTP/1.1 505 HTTP Version Not Supported\r\n\r\n'
 
 HTTP_REQUEST_PARAMS_400 = [
-    # ('PUT /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', RESPONSE_404),
-    # ('GET /path/file.html HTTP/1.0\r\nHost: www.host1.com:80\r\n\r\n', RESPONSE_505),
-    # ('POST /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', RESPONSE_505),
     'GE /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     'GET/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     '/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
-    # ('GET HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
+    'GET HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     # ('GET/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
     # ('GETHTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
     # ('GET /path/file.html HTTP/1.1\r\nwww.host1.com:80\r\n\r\n'),
@@ -49,6 +46,12 @@ HTTP_REQUEST_PARAMS_400 = [
 HTTP_REQUEST_PARAMS_405 = [
     'PUT /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     'POST /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'
+]
+
+HTTP_REQUEST_PARAMS_505 = [
+    'POST /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
+    'GET /path/file.html HTTP/1.0\r\nHost: www.host1.com:80\r\n\r\n',
+    'PUT /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'
 ]
 
 
@@ -82,3 +85,10 @@ def test_exceptions_405(request):
     """."""
     from client import client
     assert client(request) == RESPONSE_405
+
+
+@pytest.mark.parametrize('request', HTTP_REQUEST_PARAMS_505)
+def test_exceptions_505(request):
+    """."""
+    from client import client
+    assert client(request) == RESPONSE_505

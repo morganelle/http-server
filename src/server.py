@@ -7,7 +7,6 @@ import socket
 import sys
 import os.path
 import os
-import io
 
 
 LINE_BREAK = '\r\n'
@@ -44,18 +43,7 @@ def resolve_uri(uri):
         split_request = request_path.split('.')
         file_type = file_type_dict[split_request[-1]]
         size = os.path.getsize(request_path)
-        if file_type not in ['text/plain', 'text/html']:
-            # body_read = '<!DOCTYPE html><html><body><p>Insert {} here</p></body></html>'.format(request_path) 
-            # size = len(body_read)
-            # size = os.path.getsize(request_path)
-            body = open(request_path, 'rb')
-            body_read = body.read()
-            # body_read.decode('utf-8')
-            # body_read.encode('utf-8')
-            body.close()
-            return file_type, body_read, size
-        body = io.open(request_path, encoding='utf-8')
-        body = open(request_path)
+        body = open(request_path, 'rb')
         body_read = body.read()
         body.close()
         return file_type, body_read, size
@@ -85,7 +73,7 @@ def response_error(error):
         '505': 'HTTP/1.1 505 HTTP Version Not Supported'
     }
     print(error, error in error_dict)
-    response_error = '{}{}'.format(error_dict.get(error, '400 Bad Request'), CRLF)
+    response_error = '{}{}'.format(error_dict.get(error, 'HTTP/1.1 400 Bad Request'), CRLF)
     print(error, 'response error before encoding', response_error)
     return response_error.encode('utf-8')
 
@@ -112,10 +100,10 @@ def parse_request(client_request):
         if get_present.match(client_request) is not None:
             print('in 405 if')
             raise ValueError('405')
-        elif version_correct.match(client_request) is None:
+        elif version_correct.search(client_request) is None:
             print('in 505 elif')
             raise ValueError('505')
-        raise ValueError()
+        raise ValueError('400')
     uri = '{}{}'.format(mo.group(2), mo.group(3))
     print('uri', uri)
     return response_ok(uri)
