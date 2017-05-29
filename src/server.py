@@ -20,13 +20,13 @@ def resolve_uri(uri):
     request_path = os.path.join(ROOT_PATH, resource)
     print('request_path', request_path, 'isdir:', os.path.isdir(request_path))
     if os.path.isdir(request_path):
-        print('in path match', request_path)
+        print('Path match:', request_path)
         body = os.listdir(request_path)
         body = '<!DOCTYPE html><html><body><p>{}</p></body></html>'.format(body)
         size = len(body)
         return 'text/html', body, size
     elif os.path.isfile(request_path):
-        print('in elif for .isfile')
+        print('File match:', request_path)
         file_type_dict = {
             'txt': 'text/plain',
             'html': 'text/html',
@@ -48,7 +48,6 @@ def resolve_uri(uri):
         body.close()
         return file_type, body_read, size
     else:
-        print('uri value error')
         raise ValueError('404')
 
 
@@ -72,9 +71,9 @@ def response_error(error):
         '405': 'HTTP/1.1 405 Method Not Allowed',
         '505': 'HTTP/1.1 505 HTTP Version Not Supported'
     }
-    print(error, error in error_dict)
     response_error = '{}{}'.format(error_dict.get(error, 'HTTP/1.1 400 Bad Request'), CRLF)
-    print(error, 'response error before encoding', response_error)
+    print('''Response error: {}
+        '''.format(response_error))
     return response_error.encode('utf-8')
 
 
@@ -93,19 +92,16 @@ def parse_request(client_request):
         (.*)
         (\r\n\r\n)
         )''', re.VERBOSE | re.DOTALL)
-    print(client_request)
     mo = http_regex.match(client_request)
     if mo is None:
-        print('before if')
+        print('Error in request')
         if get_present.match(client_request) is not None:
-            print('in 405 if')
             raise ValueError('405')
         elif version_correct.search(client_request) is not None:
-            print('in 505 elif')
             raise ValueError('505')
         raise ValueError('400')
     uri = '{}{}'.format(mo.group(2), mo.group(3))
-    print('uri', uri)
+    print('uri:', uri)
     return response_ok(uri)
 
 
@@ -115,7 +111,7 @@ def server():
                            type=socket.SOCK_STREAM,
                            proto=socket.IPPROTO_TCP)
     address = ('127.0.0.1', 5000)
-    print('server running at port', address[1])
+    print('Server running at port', address[1])
     server.bind(address)
     server.listen(1)
 
@@ -132,12 +128,12 @@ def server():
                 if client_message.decode('utf-8').endswith(CRLF):
                     complete = True
 
-            print('server received: ', client_message.decode('utf-8'))
+            print('Server received: ', client_message.decode('utf-8'))
             try:
                 conn.sendall(parse_request(client_message.decode('utf-8')))
-                print("I sent the message back to the client.")
+                print("Message sent to client.\n")
             except ValueError as x:
-                print('except statement x:', x)
+                print('Except statement x:', x)
                 conn.sendall(response_error(x[0]))
             conn.close()
 
