@@ -51,7 +51,7 @@ def resolve_uri(uri):
             body = open(request_path, 'rb')
             body_read = body.read()
             # body_read.decode('utf-8')
-            body_read.encode('utf-8')
+            # body_read.encode('utf-8')
             body.close()
             return file_type, body_read, size
         body = io.open(request_path, encoding='utf-8')
@@ -68,13 +68,13 @@ def response_ok(uri):
     """Send an ok response."""
     content_type, content, size = resolve_uri(uri)
     response_ok = 'HTTP/1.1 200 OK\r\nContent-Type: {}\r\nContent-Length: {}{}{}{}'.format(
-        content_type,
+        content_type.encode('utf-8'),
         size,
         CRLF,
         content,
         CRLF)
     print(response_ok)
-    return response_ok.encode('utf-8')
+    return response_ok
 
 
 def response_error(error):
@@ -94,11 +94,11 @@ def parse_request(client_request):
     """Parse client HTTP request and raise errors."""
     get_present = re.compile(
         r'POST|PUT|HEAD|CONNECT|DELETE|OPTIONS|TRACE|PATCH')
-    version_correct = re.compile(r'HTTP/1.1')
+    version_correct = re.compile(r'HTTP/1\.1')
     http_regex = re.compile(r'''(
         (GET\s)
         ([^\s]+\s)
-        (HTTP/1.1)
+        (HTTP/1\.1)
         (\r\n)
         (Host:\s)
         ([^\s]+)
