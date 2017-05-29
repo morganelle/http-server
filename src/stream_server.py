@@ -48,10 +48,8 @@ def resolve_uri(uri):
         if file_type not in ['text/plain', 'text/html']:
             body = 'This would be an image.'
             return file_type, body, size
-        body = io.open(request_path, encoding='utf-8')
-        body = open(request_path)
-        body_read = body.read()
-        body.close()
+        with open(request_path) as body:
+            body_read = body.read()
         return file_type, body_read, size
     else:
         print('uri value error')
@@ -64,15 +62,7 @@ def response_ok(uri):
     #  now = datetime.now()
     #  format_now = now.strftime('%a, %d %b %Y %H:%M:%S')
     format_now = 'Mon, 29 May 2017 09:49:41'
-    response_ok = '''
-HTTP/1.1 200 OK
-Date: {}
-Content-Type: {}
-Content-Length: {}
-
-{}
-
-'''.format(format_now, content_type, size, content)
+    response_ok = 'HTTP/1.1 200 OK\r\nDate: {}\r\nContent-Type: {}\r\nContent-Length: {}\r\n\r\n{}{}'.format(format_now, content_type, size, content, CRLF)
     print(response_ok)
     return response_ok.encode('utf-8')
 
@@ -96,7 +86,7 @@ def parse_request(client_request):
     """Parse client HTTP request and raise errors."""
     get_present = re.compile(
         r'POST|PUT|HEAD|CONNECT|DELETE|OPTIONS|TRACE|PATCH')
-    version_correct = re.compile(r'HTTP/1.1')
+    version_correct = re.compile(r'HTTP/1\.1')
     http_regex = re.compile(r'''(
         (GET\s)
         ([^\s]+\s)
@@ -132,7 +122,7 @@ def el_server(conn, address):
             complete = False
 
             while not complete:
-                part = conn.recv(buffer_length)
+                part = conn.recv(8)
                 client_message += part
                 if client_message.decode('utf-8').endswith(CRLF):
                     complete = True

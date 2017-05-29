@@ -20,13 +20,14 @@ def client(message):
     complete = False
     while not complete:
         part = client.recv(buffer_length)
+        print(part)
         echo_message += part
         if echo_message.decode('utf-8').endswith(CRLF):
             complete = True
 
     client.shutdown(socket.SHUT_WR)
     client.close()
-    return echo_message.decode('utf-8')
+    return echo_message
 
 
 if __name__ == '__main__':
