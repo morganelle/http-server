@@ -70,6 +70,7 @@ def response_ok(uri):
 def response_error(error):
     """Send an error response."""
     error_dict = {
+        '400': 'HTTP/1.1 400 Bad Request',
         '404': 'HTTP/1.1 404 Not Found',
         '405': 'HTTP/1.1 405 Method Not Allowed',
         '505': 'HTTP/1.1 505 HTTP Version Not Supported'
@@ -77,7 +78,7 @@ def response_error(error):
     print(error, error in error_dict)
     response_error = '{}{}'.format(
         error_dict.get(
-            error, '400 Bad Request'), CRLF)
+            error, 'HTTP/1.1 400 Bad Request'), CRLF)
     print(error, 'response error before encoding', response_error)
     return response_error.encode('utf-8')
 
@@ -86,7 +87,7 @@ def parse_request(client_request):
     """Parse client HTTP request and raise errors."""
     get_present = re.compile(
         r'POST|PUT|HEAD|CONNECT|DELETE|OPTIONS|TRACE|PATCH')
-    version_correct = re.compile(r'HTTP/1\.1')
+    version_correct = re.compile(r'HTTP/1\.[^1]')
     http_regex = re.compile(r'''(
         (GET\s)
         ([^\s]+\s)
@@ -104,10 +105,10 @@ def parse_request(client_request):
         if get_present.match(client_request) is not None:
             print('in 405 if')
             raise ValueError('405')
-        elif version_correct.search(client_request) is None:
-            print('in 505 elif', version_correct)
+        elif version_correct.search(client_request) is not None:
+            print(version_correct, client_request, 'in 505 elif')
             raise ValueError('505')
-        raise ValueError()
+        raise ValueError('400')
     uri = '{}{}'.format(mo.group(2), mo.group(3))
     print('uri', uri)
     return response_ok(uri)
@@ -122,7 +123,7 @@ def el_server(conn, address):
             complete = False
 
             while not complete:
-                part = conn.recv(8)
+                part = conn.recv(256)
                 client_message += part
                 if client_message.decode('utf-8').endswith(CRLF):
                     complete = True
@@ -133,7 +134,7 @@ def el_server(conn, address):
                 print("I sent the message back to the client.")
             except ValueError as x:
                 print('except statement x:', x)
-                conn.sendall(response_error(str(x)))
+                conn.sendall(response_error(x[0]))
             conn.close()
 
     except KeyboardInterrupt:
