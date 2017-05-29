@@ -22,7 +22,7 @@ HTTP_REQUEST_PARAMS_400 = [
     # ('POST /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n', RESPONSE_505),
     'GE /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     'GET/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
-    '/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'
+    '/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     # ('GET HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
     # ('GET/path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
     # ('GETHTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
@@ -35,8 +35,8 @@ HTTP_REQUEST_PARAMS_400 = [
     # ('GET /path/file.html    HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n'),
     # ('GET /path/file.htmlHTTP/1.1\r\nHost:www.host1.com:80\r\n\r\n'),
     # ('GET /path/file.htmlHTTP/1.1Host:www.host1.com:80'),
-    # ('GET\r\n\r\n'),
-    # ('/path/file.html'),
+    'GET\r\n\r\n',
+    '/path/file.html\r\n\r\n'
     # ('HTTP/1.1\r\n'),
     # ('Host: www.host1.com:80'),
     # ('GET /path/file.html HTTP/1.1\r\n\sHost: www.host1.com:80\r\n\r\\'),
@@ -71,14 +71,14 @@ def test_uri_good_html():
 
 
 @pytest.mark.parametrize('request', HTTP_REQUEST_PARAMS_400)
-def test_exceptions(request):
+def test_exceptions_400(request):
     """."""
     from client import client
     assert client(request) == RESPONSE_400
 
 
 @pytest.mark.parametrize('request', HTTP_REQUEST_PARAMS_405)
-def test_exceptions(request):
+def test_exceptions_405(request):
     """."""
     from client import client
     assert client(request) == RESPONSE_405
