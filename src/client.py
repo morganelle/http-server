@@ -7,7 +7,7 @@ import sys
 
 def client(message):
     """Set up our client-side socket."""
-    info = socket.getaddrinfo('127.0.0.1', 10000)
+    info = socket.getaddrinfo('127.0.0.1', 5000)
     stream = [i for i in info if i[1] == socket.SOCK_STREAM][0]
     client = socket.socket(*stream[:3])
     client.connect(stream[-1])
