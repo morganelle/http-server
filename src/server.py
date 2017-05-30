@@ -23,7 +23,7 @@ def response_error(error):
         '505': 'HTTP/1.1 505 HTTP Version Not Supported'
     }
     response_error = '{}{}'.format(
-        error_dict.get(error, '400 Not Found'), CRLF)
+        error_dict.get(error, 'HTTP/1.1 400 Not Found'), CRLF)
     return response_error.encode('utf-8')
 
 
@@ -45,9 +45,9 @@ def parse_request(client_request):
     if mo is None:
         if get_present.match(client_request) is not None:
             raise ValueError('405')
-        elif version_correct.match(client_request) is not None:
-            raise ValueError('505', '404')
-        raise ValueError()
+        elif version_correct.search(client_request) is not None:
+            raise ValueError('505')
+        raise ValueError('400')
     uri = '{}{}'.format(mo.group(2), mo.group(3))
     return response_ok(uri)
 
