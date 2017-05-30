@@ -37,7 +37,6 @@ HTTP_REQUEST_PARAMS_400 = [
     'GET/path/file.html HTTP/1.1\r\n\r\n\r\n\rHost: www.host1.com:80\r\n\r\n',
     'get garbage HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',
     'GET /path/file.htmlHTTP/1.1\r\nHost:www.host1.com:80\r\n\r\n',
-    'GET /path/file.html HTTP/1.1\r\n\sHost: www.host1.com:80\r\n\r\n',
     'GET/path/file.html HTTP/1.1\r\n\r\n\r\n\rHost: www.host1.com:80\r\n\r\n'
 ]
 
