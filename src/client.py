@@ -12,7 +12,6 @@ def client(message):
     client = socket.socket(*stream[:3])
     client.connect(stream[-1])
     CRLF = '\r\n\r\n'
-    message += CRLF
     client.sendall(message.encode('utf-8'))
 
     buffer_length = 256
