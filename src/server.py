@@ -10,13 +10,13 @@ from datetime import datetime
 
 LINE_BREAK = '\r\n'
 CRLF = '\r\n\r\n'
-ROOT_PATH = '../src/webroot'
+ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def resolve_uri(uri):
     """Determine validity of resource request."""
     resource = uri.split()[-1][1:]
-    request_path = os.path.join(ROOT_PATH, resource)
+    request_path = os.path.join(ROOT_PATH + '/webroot', resource)
     print('request_path', request_path, 'isdir:', os.path.isdir(request_path))
     if os.path.isdir(request_path):
         print('Path match:', request_path)
@@ -54,18 +54,19 @@ def response_ok(uri):
     """Send an ok response."""
     content_type, content, size = resolve_uri(uri)
     response_ok = 'HTTP/1.1 200 OK\r\nContent-Type: {}\r\nContent-Length: {}{}{}{}'.format(
-        content_type.encode('utf-8'),
+        content_type,
         size,
         CRLF,
         content,
         CRLF)
     print(response_ok)
-    return response_ok
+    return response_ok.encode('utf-8')
 
 
 def response_error(error):
     """Send an error response."""
     error_dict = {
+        '400': 'HTTP/1.1 400 Bad Request',
         '404': 'HTTP/1.1 404 Not Found',
         '405': 'HTTP/1.1 405 Method Not Allowed',
         '505': 'HTTP/1.1 505 HTTP Version Not Supported'
@@ -138,7 +139,8 @@ def server():
                 print("Message sent to client.\n")
             except ValueError as x:
                 print('Except statement x:', x)
-                conn.sendall(response_error(x[0]))
+                x = str(x)
+                conn.sendall(response_error(x))
             conn.close()
 
     except KeyboardInterrupt:

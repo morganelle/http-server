@@ -11,30 +11,28 @@ from datetime import datetime
 
 LINE_BREAK = '\r\n'
 CRLF = '\r\n\r\n'
-ROOT_PATH = '../src/webroot'
+ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def resolve_uri(uri):
     """Determine validity of resource request."""
-    print(uri.split())
     resource = uri.split()[-1][1:]
-    request_path = os.path.join(ROOT_PATH, resource)
+    request_path = os.path.join(ROOT_PATH + '/webroot', resource)
     print('request_path', request_path, 'isdir:', os.path.isdir(request_path))
     if os.path.isdir(request_path):
-        print('in path match')
-        print(request_path)
+        print('Path match:', request_path)
         body = os.listdir(request_path)
-        body = '<!DOCTYPE html><html><body><p>{}</p></body></html>'.format(
-            body)
+        body = '<!DOCTYPE html><html><body><p>{}</p></body></html>'.format(body)
         size = len(body)
         return 'text/html', body, size
     elif os.path.isfile(request_path):
-        print('in elif for .isfile')
+        print('File match:', request_path)
         file_type_dict = {
             'txt': 'text/plain',
             'html': 'text/html',
-            'ico': 'image/ico',
             'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'ico': 'image/x-icon',
             'png': 'image/png',
             'mpeg': 'audio/mpeg',
             'ogg': 'audio/ogg',
@@ -45,24 +43,23 @@ def resolve_uri(uri):
         split_request = request_path.split('.')
         file_type = file_type_dict[split_request[-1]]
         size = os.path.getsize(request_path)
-        if file_type not in ['text/plain', 'text/html']:
-            body = 'This would be an image.'
-            return file_type, body, size
-        with open(request_path) as body:
-            body_read = body.read()
+        body = open(request_path, 'rb')
+        body_read = body.read()
+        body.close()
         return file_type, body_read, size
     else:
-        print('uri value error')
         raise ValueError('404')
 
 
 def response_ok(uri):
     """Send an ok response."""
     content_type, content, size = resolve_uri(uri)
-    #  now = datetime.now()
-    #  format_now = now.strftime('%a, %d %b %Y %H:%M:%S')
-    format_now = 'Mon, 29 May 2017 09:49:41'
-    response_ok = 'HTTP/1.1 200 OK\r\nDate: {}\r\nContent-Type: {}\r\nContent-Length: {}\r\n\r\n{}{}'.format(format_now, content_type, size, content, CRLF)
+    response_ok = 'HTTP/1.1 200 OK\r\nContent-Type: {}\r\nContent-Length: {}{}{}{}'.format(
+        content_type,
+        size,
+        CRLF,
+        content,
+        CRLF)
     print(response_ok)
     return response_ok.encode('utf-8')
 
@@ -87,7 +84,7 @@ def parse_request(client_request):
     """Parse client HTTP request and raise errors."""
     get_present = re.compile(
         r'POST|PUT|HEAD|CONNECT|DELETE|OPTIONS|TRACE|PATCH')
-    version_correct = re.compile(r'HTTP/1\.[^1]')
+    version_correct = re.compile(r'HTTP/1\.[^1]|HTTP/[^1]\.[^1]|HTTP/[^1]\.1')
     http_regex = re.compile(r'''(
         (GET\s)
         ([^\s]+\s)
@@ -106,7 +103,7 @@ def parse_request(client_request):
             print('in 405 if')
             raise ValueError('405')
         elif version_correct.search(client_request) is not None:
-            print(version_correct, client_request, 'in 505 elif')
+            print('in 505 elif')
             raise ValueError('505')
         raise ValueError('400')
     uri = '{}{}'.format(mo.group(2), mo.group(3))
@@ -114,27 +111,37 @@ def parse_request(client_request):
     return response_ok(uri)
 
 
-def el_server(conn, address):
+def server():
     """Create socket and server."""
+    server = socket.socket(family=socket.AF_INET,
+                           type=socket.SOCK_STREAM,
+                           proto=socket.IPPROTO_TCP)
+    address = ('127.0.0.1', 10000)
+    print('server running at port', address[1])
+    server.bind(address)
+    server.listen(1)
+
     try:
         while True:
+            conn, addr = server.accept()
             client_message = b''
             buffer_length = 256
             complete = False
 
             while not complete:
-                part = conn.recv(256)
+                part = conn.recv(buffer_length)
                 client_message += part
                 if client_message.decode('utf-8').endswith(CRLF):
                     complete = True
 
-            print('server received: ', client_message.decode('utf-8'))
+            print('Server received: ', client_message.decode('utf-8'))
             try:
                 conn.sendall(parse_request(client_message.decode('utf-8')))
-                print("I sent the message back to the client.")
+                print("Message sent to client.\n")
             except ValueError as x:
-                print('except statement x:', x)
-                conn.sendall(response_error(x[0]))
+                print('Except statement x:', x)
+                x = str(x)
+                conn.sendall(response_error(x))
             conn.close()
 
     except KeyboardInterrupt:

@@ -6,15 +6,15 @@ import pytest
 
 
 CRLF = '\r\n'
-SUCCESS = b'HTTP/1.1 200 OK\r\n'
-ROOT_LIST_RESP = SUCCESS + b'Content-Type: text/html\r\nContent-Length: 135\r\n\r\n<!DOCTYPE html><html><body><p>[\'.DS_Store\', \'a_web_page.html\', \'favicon.ico\', \'images\', \'make_time.py\', \'sample.txt\']</p></body></html>\r\n\r\n'
-IMAGES_LIST_RESP = SUCCESS + b'Content-Type: text/html\r\nContent-Length: 110\r\n\r\n<!DOCTYPE html><html><body><p>[\'JPEG_example.jpg\', \'sample_1.png\', \'Sample_Scene_Balls.jpg\']</p></body></html>\r\n\r\n'
-WEB_PAGE_RESP = SUCCESS + b'Content-Type: text/html\r\nContent-Length: 125\r\n\r\n'
+SUCCESS = 'HTTP/1.1 200 OK\r\n'
+ROOT_LIST_RESP = SUCCESS + 'Content-Type: text/html\r\nContent-Length: 135\r\n\r\n<!DOCTYPE html><html><body><p>[\'.DS_Store\', \'a_web_page.html\', \'favicon.ico\', \'images\', \'make_time.py\', \'sample.txt\']</p></body></html>\r\n\r\n'
+IMAGES_LIST_RESP = SUCCESS + 'Content-Type: text/html\r\nContent-Length: 110\r\n\r\n<!DOCTYPE html><html><body><p>[\'JPEG_example.jpg\', \'sample_1.png\', \'Sample_Scene_Balls.jpg\']</p></body></html>\r\n\r\n'
+WEB_PAGE_RESP = SUCCESS + 'Content-Type: text/html\r\nContent-Length: 125\r\n\r\n'
 
-RESPONSE_400 = b'HTTP/1.1 400 Bad Request\r\n\r\n'
-RESPONSE_404 = b'HTTP/1.1 404 Not Found\r\n\r\n'
-RESPONSE_405 = b'HTTP/1.1 405 Method Not Allowed\r\n\r\n'
-RESPONSE_505 = b'HTTP/1.1 505 HTTP Version Not Supported\r\n\r\n'
+RESPONSE_400 = 'HTTP/1.1 400 Bad Request\r\n\r\n'
+RESPONSE_404 = 'HTTP/1.1 404 Not Found\r\n\r\n'
+RESPONSE_405 = 'HTTP/1.1 405 Method Not Allowed\r\n\r\n'
+RESPONSE_505 = 'HTTP/1.1 505 HTTP Version Not Supported\r\n\r\n'
 
 HTTP_REQUEST_PARAMS_400 = [
     'GE /path/file.html HTTP/1.1\r\nHost: www.host1.com:80\r\n\r\n',

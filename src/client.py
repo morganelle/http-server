@@ -7,7 +7,7 @@ import sys
 
 def client(message):
     """Set up our client-side socket."""
-    info = socket.getaddrinfo('127.0.0.1', 5000)
+    info = socket.getaddrinfo('127.0.0.1', 10000)
     stream = [i for i in info if i[1] == socket.SOCK_STREAM][0]
     client = socket.socket(*stream[:3])
     client.connect(stream[-1])
@@ -27,7 +27,7 @@ def client(message):
 
     client.shutdown(socket.SHUT_WR)
     client.close()
-    return echo_message
+    return echo_message.decode('utf-8')
 
 
 if __name__ == '__main__':
