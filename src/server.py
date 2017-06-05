@@ -11,13 +11,13 @@ import os
 
 LINE_BREAK = '\r\n'
 CRLF = '\r\n\r\n'
-ROOT_PATH = '../src/webroot'
+ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def resolve_uri(uri):
     """Determine validity of resource request."""
     resource = uri.split()[-1][1:]
-    request_path = os.path.join(ROOT_PATH, resource)
+    request_path = os.path.join(ROOT_PATH + '/webroot', resource)
     print('request_path', request_path, 'isdir:', os.path.isdir(request_path))
     if os.path.isdir(request_path):
         print('Path match:', request_path)
