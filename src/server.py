@@ -55,22 +55,25 @@ def response_ok(uri):
     """Send an ok response."""
     content_type, content, size = resolve_uri(uri)
     response_ok = 'HTTP/1.1 200 OK\r\nContent-Type: {}\r\nContent-Length: {}{}{}{}'.format(
-        content_type.encode('utf-8'),
+        content_type,
         size,
         CRLF,
         content,
         CRLF)
     print(response_ok)
-    return response_ok
+    return response_ok.encode('utf-8')
 
 
 def response_error(error):
     """Send an error response."""
+    print('error', error, type(error))
     error_dict = {
+        '400': 'HTTP/1.1 400 Bad Request',
         '404': 'HTTP/1.1 404 Not Found',
         '405': 'HTTP/1.1 405 Method Not Allowed',
         '505': 'HTTP/1.1 505 HTTP Version Not Supported'
     }
+    print(error in error_dict)
     response_error = '{}{}'.format(error_dict.get(error, 'HTTP/1.1 400 Bad Request'), CRLF)
     print('''Response error: {}
         '''.format(response_error))
@@ -133,8 +136,8 @@ def server():
                 conn.sendall(parse_request(client_message.decode('utf-8')))
                 print("Message sent to client.\n")
             except ValueError as x:
-                print('Except statement x:', x)
-                conn.sendall(response_error(x[0]))
+                x = str(x)
+                conn.sendall(response_error(x))
             conn.close()
 
     except KeyboardInterrupt:
