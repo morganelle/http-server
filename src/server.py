@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Server module for the Socket Echo assignment."""
 
 
@@ -18,15 +17,12 @@ def resolve_uri(uri):
     """Determine validity of resource request."""
     resource = uri.split()[-1][1:]
     request_path = os.path.join(ROOT_PATH + '/webroot', resource)
-    print('request_path', request_path, 'isdir:', os.path.isdir(request_path))
     if os.path.isdir(request_path):
-        print('Path match:', request_path)
         body = os.listdir(request_path)
         body = '<!DOCTYPE html><html><body><p>{}</p></body></html>'.format(body)
         size = len(body)
         return 'text/html', body, size
     elif os.path.isfile(request_path):
-        print('File match:', request_path)
         file_type_dict = {
             'txt': 'text/plain',
             'html': 'text/html',
@@ -60,23 +56,18 @@ def response_ok(uri):
         CRLF,
         content,
         CRLF)
-    print(response_ok)
     return response_ok.encode('utf-8')
 
 
 def response_error(error):
     """Send an error response."""
-    print('error', error, type(error))
     error_dict = {
         '400': 'HTTP/1.1 400 Bad Request',
         '404': 'HTTP/1.1 404 Not Found',
         '405': 'HTTP/1.1 405 Method Not Allowed',
         '505': 'HTTP/1.1 505 HTTP Version Not Supported'
     }
-    print(error in error_dict)
     response_error = '{}{}'.format(error_dict.get(error, 'HTTP/1.1 400 Bad Request'), CRLF)
-    print('''Response error: {}
-        '''.format(response_error))
     return response_error.encode('utf-8')
 
 
@@ -97,14 +88,12 @@ def parse_request(client_request):
         )''', re.VERBOSE | re.DOTALL)
     mo = http_regex.match(client_request)
     if mo is None:
-        print('Error in request')
         if get_present.match(client_request) is not None:
             raise ValueError('405')
         elif version_correct.search(client_request) is not None:
             raise ValueError('505')
         raise ValueError('400')
     uri = '{}{}'.format(mo.group(2), mo.group(3))
-    print('uri:', uri)
     return response_ok(uri)
 
 
@@ -134,7 +123,6 @@ def server():
             print('Server received: ', client_message.decode('utf-8'))
             try:
                 conn.sendall(parse_request(client_message.decode('utf-8')))
-                print("Message sent to client.\n")
             except ValueError as x:
                 x = str(x)
                 conn.sendall(response_error(x))
