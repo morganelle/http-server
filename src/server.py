@@ -57,7 +57,6 @@ def response_ok(uri):
     msg += b'\r\nContent-Length: '
     msg += content_size.encode('utf-8')
     msg += CRLF.encode('utf-8')
-    print(msg, type(msg), content, type(content))
     msg += content
     msg += CRLF.encode('utf-8')
     return msg
@@ -71,7 +70,6 @@ def response_error(error):
         '405': 'HTTP/1.1 405 Method Not Allowed',
         '505': 'HTTP/1.1 505 HTTP Version Not Supported'
     }
-    print('error', error, type(error))
     response_error = '{}{}'.format(error_dict.get(error, 'HTTP/1.1 400 Bad Request'), CRLF)
     return response_error.encode('utf-8')
 
