@@ -14,7 +14,8 @@ setup(
     entry_points={
         'console_scripts': [
             "client = client:client",
-            "server = server:server"
+            "server = server:server",
+            "stream = stream_server:server"
         ]
     }
 )

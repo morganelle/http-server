@@ -5,7 +5,6 @@ import sys
 import os.path
 import os
 
-
 LINE_BREAK = '\r\n'
 CRLF = '\r\n\r\n'
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -102,8 +101,8 @@ def server():
     server = socket.socket(family=socket.AF_INET,
                            type=socket.SOCK_STREAM,
                            proto=socket.IPPROTO_TCP)
-    address = ('127.0.0.1', 5000)
-    print('Server running at port', address[1])
+    address = ('127.0.0.1', 10000)
+    print('server running at port', address[1])
     server.bind(address)
     server.listen(1)
 
@@ -134,6 +133,10 @@ def server():
         print('Exit complete.')
         sys.exit()
 
-
 if __name__ == '__main__':
-    server()
+    from gevent.server import StreamServer
+    from gevent.monkey import patch_all
+    patch_all()
+    server = StreamServer(('127.0.0.1', 10000), el_server)
+    print('Starting echo server on port 10000')
+    server.serve_forever()
