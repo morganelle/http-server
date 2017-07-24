@@ -20,6 +20,7 @@ def resolve_uri(uri):
     if os.path.isdir(request_path):
         body = os.listdir(request_path)
         body = '<!DOCTYPE html><html><body><p>{}</p></body></html>'.format(body)
+        body = body.encode('utf-8')
         size = len(body)
         return 'text/html', body, size
     elif os.path.isfile(request_path):
@@ -48,15 +49,18 @@ def resolve_uri(uri):
 
 
 def response_ok(uri):
-    """Send an ok response."""
-    content_type, content, size = resolve_uri(uri)
-    response_ok = 'HTTP/1.1 200 OK\r\nContent-Type: {}\r\nContent-Length: {}{}{}{}'.format(
-        content_type,
-        size,
-        CRLF,
-        content,
-        CRLF)
-    return response_ok.encode('utf-8')
+    """Send a response OK, headers, and content."""
+    content_type, content, content_size = resolve_uri(uri)
+    content_size = str(content_size)
+    msg = b'HTTP/1.1 200 OK\r\nContent-Type: '
+    msg += content_type.encode('utf-8')
+    msg += b'\r\nContent-Length: '
+    msg += content_size.encode('utf-8')
+    msg += CRLF.encode('utf-8')
+    print(msg, type(msg), content, type(content))
+    msg += content
+    msg += CRLF.encode('utf-8')
+    return msg
 
 
 def response_error(error):
@@ -67,6 +71,7 @@ def response_error(error):
         '405': 'HTTP/1.1 405 Method Not Allowed',
         '505': 'HTTP/1.1 505 HTTP Version Not Supported'
     }
+    print('error', error, type(error))
     response_error = '{}{}'.format(error_dict.get(error, 'HTTP/1.1 400 Bad Request'), CRLF)
     return response_error.encode('utf-8')
 
