@@ -28,8 +28,8 @@ PARAMS_TABLE = [
 #     assert client(l) == l
 
 
-@pytest.mark.parametrize('l', PARAMS_TABLE)
-def test_response_ok(l):
+@pytest.mark.parametrize('message', PARAMS_TABLE)
+def test_response_ok(message):
     """Test confirms client receives status message."""
     from client import client
-    assert client(l) == 'HTTP/1.1 200 OK\r\n\r\n'
+    assert client(message) == 'HTTP/1.1 200 OK\r\n\r\n'
