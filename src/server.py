@@ -5,6 +5,7 @@ import sys
 import os.path
 import os
 
+
 LINE_BREAK = '\r\n'
 CRLF = '\r\n\r\n'
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -102,7 +103,7 @@ def server():
                            type=socket.SOCK_STREAM,
                            proto=socket.IPPROTO_TCP)
     address = ('127.0.0.1', 5000)
-    print('server running at port', address[1])
+    print('Server running at port', address[1])
     server.bind(address)
     server.listen(1)
 
