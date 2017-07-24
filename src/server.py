@@ -142,6 +142,6 @@ if __name__ == '__main__':  # pragma no cover
     from gevent.server import StreamServer
     from gevent.monkey import patch_all
     patch_all()
-    server = StreamServer(('127.0.0.1', 5000), el_server)
+    server = StreamServer(('127.0.0.1', 5000), server)
     print('Starting server on port 5000')
     server.serve_forever()
