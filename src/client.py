@@ -29,7 +29,7 @@ def client(message):
     return echo_message.decode('utf-8')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma no cover
     message = sys.argv[1]
     print(client(message))
     sys.exit()

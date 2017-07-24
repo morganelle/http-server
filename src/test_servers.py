@@ -7,7 +7,7 @@ import pytest
 
 CRLF = '\r\n'
 SUCCESS = 'HTTP/1.1 200 OK\r\n'
-ROOT_LIST_RESP = SUCCESS + 'Content-Type: text/html\r\nContent-Length: 120\r\n\r\n<!DOCTYPE html><html><body><p>[\'.DS_Store\', \'a_web_page.html\', \'images\', \'make_time.py\', \'sample.txt\']</p></body></html>\r\n\r\n'
+ROOT_LIST_RESP = SUCCESS + 'Content-Type: text/html\r\nContent-Length: 107\r\n\r\n<!DOCTYPE html><html><body><p>[\'a_web_page.html\', \'images\', \'make_time.py\', \'sample.txt\']</p></body></html>\r\n\r\n'
 IMAGES_LIST_RESP = SUCCESS + 'Content-Type: text/html\r\nContent-Length: 110\r\n\r\n<!DOCTYPE html><html><body><p>[\'JPEG_example.jpg\', \'sample_1.png\', \'Sample_Scene_Balls.jpg\']</p></body></html>\r\n\r\n'
 WEB_PAGE_RESP = SUCCESS + 'Content-Type: text/html\r\nContent-Length: 125\r\n\r\n'
 
